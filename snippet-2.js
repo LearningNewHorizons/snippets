@@ -36,7 +36,6 @@ for (let i=0 ; i < tableArray.length ; i++) {
 			const tempDiv = document.createElement("div")
 			tempDiv.appendChild(bgDiv)
 			tempDiv.appendChild(ifTemp)
-			tempDiv.innerHTML+= `<textarea readonly cols="80" rows="1" style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 1.1rem; resize: none; background-color: #e0e0e0; color: #080808; border: 0; padding: 5px; outline: 0;" >`+lastTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "")+"</textarea>"
 			expandoItem.dataset.cachedhtml = tempDiv.innerHTML
 		}
 		if (tempElement.querySelector("div.media-gallery") == null && tempElement.querySelector("img.preview") != null){
@@ -49,7 +48,6 @@ for (let i=0 ; i < tableArray.length ; i++) {
 			const tempDiv = document.createElement("div")
 			tempDiv.appendChild(bgDiv)
 			tempDiv.appendChild(tempImg)
-			tempDiv.innerHTML += `<textarea readonly cols="80" rows="1" style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 1.1rem; resize: none; background-color: #e0e0e0; color: #080808; border: 0; padding: 5px; outline: 0;" >`+lastTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "")+"</textarea>"
 			expandoItem.dataset.cachedhtml = tempDiv.innerHTML
 		}
 		if (tempElement.querySelector("div.media-gallery") == null && tempElement.querySelector("video.preview") != null){
@@ -63,7 +61,6 @@ for (let i=0 ; i < tableArray.length ; i++) {
 			const tempDiv = document.createElement("div")
 			tempDiv.appendChild(bgDiv)
 			tempDiv.appendChild(tempVid)
-			tempDiv.innerHTML += `<textarea readonly cols="80" rows="1" style="position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 1.1rem; resize: none; background-color: #e0e0e0; color: #080808; border: 0; padding: 5px; outline: 0;" >`+lastTitle.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "")+"</textarea>"
 			expandoItem.dataset.cachedhtml = tempDiv.innerHTML
 		}
 	}
