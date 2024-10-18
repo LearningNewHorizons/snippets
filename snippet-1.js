@@ -70,32 +70,31 @@ function nameCorrector() {
         }
     }
     document.querySelector("div.side").style = "display: none"
+    document.querySelector("style").innerHTML += "body::-webkit-scrollbar { display: none; }"
+    document.addEventListener("click", function(e){
+        if (e.target.className == "exit") {
+           document.querySelector("div.expanded").click()
+        } else if (e.target.className == "customafter") {
+            let listButtons = document.querySelectorAll("div.expando-button")
+            for (let i=0;i<listButtons.length;i++){
+                if (listButtons[i].className.includes("expanded") && i!=listButtons.length){
+                    listButtons[i].click()
+                    listButtons[i+1].click()
+                    break
+                }
+            }
+        } else if (e.target.className == "custombefore") {
+            let listButtons = document.querySelectorAll("div.expando-button")
+            for (let i=0;i<listButtons.length;i++){
+                if (listButtons[i].className.includes("expanded") && i!=0){
+                    listButtons[i].click()
+                    listButtons[i-1].click()
+                    break
+                } else if (listButtons[i].className.includes("expanded") && i==0){
+                    listButtons[i].click()
+                    break
+                }
+            }
+        }
+    })
 }
-document.querySelector("style").innerHTML += "body::-webkit-scrollbar { display: none; }"
-nameCorrector()
-document.addEventListener("click", function(e){
-    if (e.target.className == "exit") {
-       document.querySelector("div.expanded").click()
-    } else if (e.target.className == "customafter") {
-        let listButtons = document.querySelectorAll("div.expando-button")
-        for (let i=0;i<listButtons.length;i++){
-            if (listButtons[i].className.includes("expanded") && i!=listButtons.length){
-                listButtons[i].click()
-                listButtons[i+1].click()
-                break
-            }
-        }
-    } else if (e.target.className == "custombefore") {
-        let listButtons = document.querySelectorAll("div.expando-button")
-        for (let i=0;i<listButtons.length;i++){
-            if (listButtons[i].className.includes("expanded") && i!=0){
-                listButtons[i].click()
-                listButtons[i-1].click()
-                break
-            } else if (listButtons[i].className.includes("expanded") && i==0){
-                listButtons[i].click()
-                break
-            }
-        }
-    }
-})
