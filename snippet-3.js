@@ -230,10 +230,15 @@ function correctingTitle(divItem, index){
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
         // configutring the gallery contents
-        // TODO: check to see how the video galleries react with this
+        // TODO: fix video galleries
         } else if (tempoExpo.querySelector("div.media-gallery") != null){
-            tempoExpo.querySelector("div.md").remove();
-            tempoExpo.querySelector("div.usertext").remove();
+            if (tempoExpo.querySelector("div.crosspost-preview-content") != null){
+                const tempPreview = tempoExpo.querySelector(".media-preview");
+                tempoExpo.innerHTML = "";
+                tempoExpo.appendChild(tempPreview);
+            } 
+            if (tempoExpo.querySelector("div.md") != null){tempoExpo.querySelector("div.md").remove();}
+            if (tempoExpo.querySelector("div.usertext") != null){tempoExpo.querySelector("div.usertext").remove();}
             tempoExpo.querySelector("div.media-preview").style = "width: 100%; height: 100%;";
             tempoExpo.querySelector("div.media-gallery").style = "width: 100%; height: 100%;";
             tempoExpo.querySelectorAll("div.gallery-preview").forEach((e)=>{
@@ -247,12 +252,14 @@ function correctingTitle(divItem, index){
             });
             tempoExpo.querySelectorAll("div.media-preview-content").forEach((e)=>{
                 e.style = "width: 100%; height: calc(100% - 2rem); object-fit: contain;";
-                const tempImg = e.querySelector("img.preview")
-                tempImg.removeAttribute("width");
-                tempImg.removeAttribute("height");
-                tempImg.style = "width: 100%; height: 100%; object-fit: contain;";
-                e.innerHTML = "";
-                e.appendChild(tempImg); 
+                if (e.querySelector("img.preview") != null){
+                    const tempImg = e.querySelector("img.preview")
+                    tempImg.removeAttribute("width");
+                    tempImg.removeAttribute("height");
+                    tempImg.style = "width: 100%; height: 100%; object-fit: contain;";
+                    e.innerHTML = "";
+                    e.appendChild(tempImg);
+                }
             });
             
             tempoExpo.appendChild(bgDiv);
