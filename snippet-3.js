@@ -48,7 +48,10 @@ div.replacement > .replaced-img {
     cursor: pointer;
 }
 div.title-shell {
-    display: block;
+    display: flex;
+    flex-flow: column;
+    margin-left: 1rem;
+    justify-content: center;
     grid-column: 2/3;
 }
 div.title-shell > p {
@@ -65,7 +68,6 @@ div.expando{
     align-content: center; 
     background-color: #cccccc;
     object-fit: contain;
-    // container-type: size;
 }
 div.bg-div {
     position: fixed;
@@ -82,6 +84,9 @@ div.bg-div {
 }
 div.bg-prev{
     position: fixed; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     left: 4px; 
     top: 50%; 
     transform: translateY(-50%); 
@@ -94,9 +99,13 @@ div.bg-prev{
     text-align: center; 
     text-justify: center; 
     border-radius: 6px;
+    z-index: 5;
 }
 div.bg-next{
     position: fixed; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 50%; 
     transform: translateY(-50%); 
     background-color: rgba(255, 255, 0, 0.8); 
@@ -109,11 +118,55 @@ div.bg-next{
     text-justify: center; 
     border-radius: 6px;
     right: 4px;
+    z-index: 5;
 }
 div.thing {
     display: grid;
     grid-template-columns: 204px 1fr;
-}`;
+}
+
+.table-prev-page-link, .table-next-page-link{
+    color: white;
+    background-color: black;
+    font-size: 2rem;
+    padding: 20px;
+    border-radius: 1rem;
+    width: 10rem;
+    height: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.table-link-buttons{
+    display: inline-block;
+    margin-right: 10%;
+}
+.expando-button{
+    position: absolute;
+    width: 204px;
+    height: 199px;
+    background-size: 100px 100px;
+    filter: drop-shadow(0px 0px 5px rgba(0, 40, 100, 1));
+}
+
+.bg-close, .bg-fst{
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    z-index: 5;
+}
+.bg-close{
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.9);
+}
+.bg-fst{
+    top: 10px;
+    left: 100px;
+    background-color: rgba(0, 255, 0, 0.9);
+}
+`;
 if (table.querySelectorAll('.midcol') != null){table.querySelectorAll('.midcol').forEach((e)=>e.remove());}
 table.querySelectorAll("a.thumbnail").forEach((e) => {
     if (e.querySelector("img") != null){
@@ -123,6 +176,34 @@ table.querySelectorAll("a.thumbnail").forEach((e) => {
 });
 for (let i=0 ; i < table.children.length-1 ; i++ ){
     correctingTitle(table.children[i], i);
+}
+if (table.querySelector(".nav-buttons")!=null){
+    let tablePrevPageLink = document.createElement("a");
+    let tableNextPageLink = document.createElement("a");
+    const tempNavigation = table.querySelector(".nav-buttons");
+    if (table.querySelector(".next-button") != null){
+        const tempSpan = table.querySelector(".next-button");
+        tableNextPageLink = tempSpan.querySelector("a").cloneNode("true");
+        tableNextPageLink.classList.add("table-next-page-link");
+    } else {
+        tableNextPageLink = document.createElement("a");
+    }
+
+    if (table.querySelector(".prev-button") != null ){
+        const tempSpan = table.querySelector(".prev-button");
+        tablePrevPageLink = tempSpan.querySelector("a").cloneNode("true");
+        tablePrevPageLink.classList.add("table-prev-page-link");
+    } else {
+        tablePrevPageLink = document.createElement("a");
+    }
+    const tableLinkButtons = document.createElement("span");
+    tableLinkButtons.classList.add("table-link-buttons");
+    const tableLinkButtons2 = tableLinkButtons.cloneNode("true");
+    tableLinkButtons.appendChild(tablePrevPageLink);
+    tableLinkButtons2.appendChild(tableNextPageLink);
+    tempNavigation.innerHTML = "";
+    tempNavigation.appendChild(tableLinkButtons);
+    tempNavigation.appendChild(tableLinkButtons2);
 }
 function correctingTitle(divItem, index){
     if (divItem.querySelector(".title-shell") != null){
@@ -210,23 +291,35 @@ function correctingTitle(divItem, index){
     }
     if (divItem.querySelector("div.expando-button") != null){
         const tempExpandoButton = divItem.querySelector("div.expando-button");
-        tempExpandoButton.style = "position: absolute; margin: 0 5 0 0; width: 204px; height: 199px; background-image: url(https://upload.wikimedia.org/wikipedia/commons/e/e4/Play-button_-_Guard13007_-_white_-_game-icons.svg); background-position: 100px 100px; background-repeat: no-repeat; background-size: 100px 100px; filter: brightness(0.8);";
+        tempExpandoButton.style = "background-image: url(https://upload.wikimedia.org/wikipedia/commons/e/e4/Play-button_-_Guard13007_-_white_-_game-icons.svg); background-position: 100px 100px; background-repeat: no-repeat;";
         // thumbnailLink.insertAdjacentElement("afterend",tempExpandoButton);
         container.appendChild(tempExpandoButton);
     } 
     /* configuring the expando div to get the focus*/
     if (divItem.querySelector("div.expando-button") != null){
         const bgDiv = document.createElement("div");
-        bgDiv.innerText= "X"
+        // bgDiv.innerText= "X"
         bgDiv.classList.add("bg-div");
-        const customNext = document.createElement("div");
-        customNext.classList.add("bg-next");
-        customNext.innerHTML=`>`;
-        const customPrev = document.createElement("div");
-        customPrev.classList.add("bg-prev");
-        customPrev.innerHTML=`<`;
-        bgDiv.appendChild(customNext);
-        bgDiv.appendChild(customPrev);
+        // -----------------------------------------------
+        const bgControls = document.createElement("div");
+        const bgControlsFullScreenToggle = document.createElement("div");
+        bgControlsFullScreenToggle.classList.add("bg-fst");
+        const bgControlsClose = document.createElement("div");
+        bgControlsClose.classList.add("bg-close");
+        const bgControlsNextPost = document.createElement("div");
+        bgControlsNextPost.classList.add("bg-next");
+        bgControlsNextPost.innerHTML=`>`;
+        const bgControlsPreviousPost = document.createElement("div");
+        bgControlsPreviousPost.classList.add("bg-prev");
+        bgControlsPreviousPost.innerHTML=`<`;
+        bgControls.appendChild(bgControlsFullScreenToggle);
+        bgControls.appendChild(bgControlsClose);
+        bgControls.appendChild(bgControlsNextPost);
+        bgControls.appendChild(bgControlsPreviousPost);
+        // -------------------------------------------
+
+        // bgDiv.appendChild(customNext);
+        // bgDiv.appendChild(customPrev);
         const expnadoDiv = divItem.querySelector("div.expando");
         const tempoExpo = document.createElement("div");
         tempoExpo.innerHTML = expnadoDiv.dataset.cachedhtml;
@@ -237,6 +330,7 @@ function correctingTitle(divItem, index){
             tempImg.removeAttribute("height");
             tempImg.style = "object-fit: contain; width: 100%; height: 100%;";
             tempoExpo.innerHTML = "";
+            tempoExpo.appendChild(bgControls);
             tempoExpo.appendChild(tempImg);
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
@@ -246,6 +340,7 @@ function correctingTitle(divItem, index){
             tempIf.width = "100%";
             tempIf.height = "100%";
             tempoExpo.innerHTML = "";
+            tempoExpo.appendChild(bgControls);
             tempoExpo.appendChild(tempIf);
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
@@ -259,6 +354,7 @@ function correctingTitle(divItem, index){
             tempVideo.style.height = "100%";
             tempVideo.controls = "true";
             tempoExpo.innerHTML = "";
+            tempoExpo.appendChild(bgControls);
             tempoExpo.appendChild(tempVideo);
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
@@ -268,6 +364,7 @@ function correctingTitle(divItem, index){
             if (tempoExpo.querySelector("div.crosspost-preview-content") != null){
                 const tempPreview = tempoExpo.querySelector(".media-preview");
                 tempoExpo.innerHTML = "";
+                tempoExpo.appendChild(bgControls);
                 tempoExpo.appendChild(tempPreview);
             } 
             if (tempoExpo.querySelector("div.md") != null){tempoExpo.querySelector("div.md").remove();}
@@ -293,11 +390,12 @@ function correctingTitle(divItem, index){
                     e.appendChild(tempImg);
                 }
             });
-            tempoExpo.querySelector("div.gallery-tiles").style = "";
+            tempoExpo.querySelector("div.gallery-tiles").style = "display: flex; flex-wrap: wrap;";
             tempoExpo.querySelector("div.gallery-tiles").querySelectorAll("div.gallery-tile").forEach((e)=>{e.style = "";});
             tempoExpo.querySelector("div.gallery-tiles").querySelectorAll("img").forEach((e)=>{
                 e.style = "width: 305px";
             });
+            tempoExpo.prepend(bgControls);
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
         } 
@@ -307,36 +405,66 @@ function correctingTitle(divItem, index){
         if (divItem.querySelector("a.thumbnail") != null) { divItem.querySelector("a.thumbnail").remove();}
         if (divItem.querySelector("div.child") != null) { divItem.querySelector("div.child").remove();}
         if (divItem.querySelector("div.unvoted") != null) { divItem.querySelector("div.unvoted").remove();}
+
     }
 }
+function goBackToFullScreenF(){
+    if (document.fullscreenElement != null){
+        document.exitFullscreen();
+    }
+    setTimeout(()=>{document.querySelector("div.expanded").parentElement.parentElement.querySelector("div.expando").requestFullscreen()} , 100);
+}
+
 table.addEventListener("click",(e)=>{
     if (e.target.className == "cpy-button"){
         const targetIndex = e.target.getAttribute("index");
         const eventAreas = document.querySelectorAll("textarea");
         eventAreas[targetIndex].select();
         document.execCommand("copy");
-    } else if (e.target.className == "bg-div"){
+    } else if (e.target.className == "bg-div" || e.target.className == "bg-close"){
         document.querySelector("div.expanded").click();
+        if (document.fullscreenElement != null){
+            document.exitFullscreen();
+        }
     } else if (e.target.className == "bg-next") {
-		let listButtons = document.querySelectorAll("div.expando-button")
+		const goBackToFullScreen = false;
+        let listButtons = document.querySelectorAll("div.expando-button");
 		for (let i=0;i<listButtons.length;i++){
 			if (listButtons[i].className.includes("expanded") && i!=listButtons.length){
-				listButtons[i].click()
-				listButtons[i+1].click()
-				break
+				listButtons[i].click();
+				listButtons[i+1].click();
+				break;
 			}
 		}
+        if (document.fullscreenElement != null){
+            goBackToFullScreenF();
+        }
 	} else if (e.target.className == "bg-prev") {
-		let listButtons = document.querySelectorAll("div.expando-button")
+		const goBackToFullScreen = false;
+        let listButtons = document.querySelectorAll("div.expando-button");
 		for (let i=0;i<listButtons.length;i++){
 			if (listButtons[i].className.includes("expanded") && i!=0){
-				listButtons[i].click()
-				listButtons[i-1].click()
-				break
+				listButtons[i].click();
+				listButtons[i-1].click();
+				break;
 			} else if (listButtons[i].className.includes("expanded") && i==0){
-				listButtons[i].click()
-				break
+				listButtons[i].click();
+				break;
 			}
+            
 		}
-	}
+        if (document.fullscreenElement != null){
+            goBackToFullScreenF();
+        }
+	} else if (e.target.className == "gallery-nav-back gallery-navigation"){
+        console.log("nav-back pushed");
+        setTimeout(()=>{
+            document.querySelector("div.media-gallery").querySelector("div.gallery-tiles").style = "display: flex; flex-wrap: wrap;";
+        }, 100);
+    } else if(e.target.className == "bg-fst"){
+        if (document.fullscreenElement != null){
+            document.exitFullscreen();
+        }
+        document.querySelector("div.expanded").parentElement.parentElement.querySelector("div.expando").requestFullscreen();
+    }
 });
