@@ -65,6 +65,7 @@ div.expando{
     align-content: center; 
     background-color: #cccccc;
     object-fit: contain;
+    // container-type: size;
 }
 div.bg-div {
     position: fixed;
@@ -79,25 +80,51 @@ div.bg-div {
     cursor: pointer;
     text-align: right; 
 }
+div.bg-prev{
+    position: fixed; 
+    left: 4px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    background-color: rgba(255, 255, 0, 0.8); 
+    width: 100px; 
+    height: 100px; 
+    color:#808000; 
+    font-size: 4rem; 
+    cursor: pointer; 
+    text-align: center; 
+    text-justify: center; 
+    border-radius: 6px;
+}
+div.bg-next{
+    position: fixed; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    background-color: rgba(255, 255, 0, 0.8); 
+    width: 100px; 
+    height: 100px; 
+    color:#808000; 
+    font-size: 4rem; 
+    cursor: pointer; 
+    text-align: center; 
+    text-justify: center; 
+    border-radius: 6px;
+    right: 4px;
+}
 div.thing {
     display: grid;
     grid-template-columns: 204px 1fr;
-}
-`
+}`;
 if (table.querySelectorAll('.midcol') != null){table.querySelectorAll('.midcol').forEach((e)=>e.remove());}
 table.querySelectorAll("a.thumbnail").forEach((e) => {
-    // e.style = "margin: 0 5 0 0; width: 204px; height: 199px;";
     if (e.querySelector("img") != null){
         e.querySelector("img").removeAttribute("width");
         e.querySelector("img").removeAttribute("height");
-        // e.querySelector("img").setAttribute("style", "width: 100%; height: 100%; object-fit: contain;");
     }
 });
 for (let i=0 ; i < table.children.length-1 ; i++ ){
     correctingTitle(table.children[i], i);
 }
 function correctingTitle(divItem, index){
-    /* check to see if the item has been fixed before */
     if (divItem.querySelector(".title-shell") != null){
         return;
     }
@@ -142,7 +169,6 @@ function correctingTitle(divItem, index){
     titleNew2.innerHTML += " shared on ";
     titleNew2.insertAdjacentElement("beforeend", tempDomain);
     titleNew2.style.overflowWrap = "";
-    
     /* getting the action buttons and replacing them to be put in to output */
     const actionReplaceDiv = document.createElement("div");
     actionReplaceDiv.classList.add("entry");
@@ -150,10 +176,10 @@ function correctingTitle(divItem, index){
     actionReplace.classList.add("flat-list");
     actionReplace.classList.add("buttons");
     actionReplace.style = "font-size: 0.8rem;";
+    if (divItem.querySelector("a.comments").getAttribute("href") != null ){divItem.querySelector("a.comments").setAttribute("href", divItem.querySelector("a.comments").getAttribute("href").replace("https://old.reddit.com","https://i.reddit.com"));}
     actionReplace.appendChild(divItem.querySelector("li.first").cloneNode("true"));
     actionReplace.appendChild(divItem.querySelector("li.save-button").cloneNode("true"));
     actionReplaceDiv.appendChild(actionReplace);
-    
     /* output */
     const output = document.createElement("div");
     output.classList.add("title-shell");
@@ -188,12 +214,19 @@ function correctingTitle(divItem, index){
         // thumbnailLink.insertAdjacentElement("afterend",tempExpandoButton);
         container.appendChild(tempExpandoButton);
     } 
-    
-
     /* configuring the expando div to get the focus*/
     if (divItem.querySelector("div.expando-button") != null){
         const bgDiv = document.createElement("div");
+        bgDiv.innerText= "X"
         bgDiv.classList.add("bg-div");
+        const customNext = document.createElement("div");
+        customNext.classList.add("bg-next");
+        customNext.innerHTML=`>`;
+        const customPrev = document.createElement("div");
+        customPrev.classList.add("bg-prev");
+        customPrev.innerHTML=`<`;
+        bgDiv.appendChild(customNext);
+        bgDiv.appendChild(customPrev);
         const expnadoDiv = divItem.querySelector("div.expando");
         const tempoExpo = document.createElement("div");
         tempoExpo.innerHTML = expnadoDiv.dataset.cachedhtml;
@@ -230,7 +263,7 @@ function correctingTitle(divItem, index){
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
         // configutring the gallery contents
-        // TODO: fix video galleries
+        // TODO: test video galleries
         } else if (tempoExpo.querySelector("div.media-gallery") != null){
             if (tempoExpo.querySelector("div.crosspost-preview-content") != null){
                 const tempPreview = tempoExpo.querySelector(".media-preview");
@@ -239,7 +272,7 @@ function correctingTitle(divItem, index){
             } 
             if (tempoExpo.querySelector("div.md") != null){tempoExpo.querySelector("div.md").remove();}
             if (tempoExpo.querySelector("div.usertext") != null){tempoExpo.querySelector("div.usertext").remove();}
-            tempoExpo.querySelector("div.media-preview").style = "width: 100%; height: 100%;";
+            tempoExpo.querySelector("div.media-preview").style = "width: 100%; height: 100%; container-type: size;";
             tempoExpo.querySelector("div.media-gallery").style = "width: 100%; height: 100%;";
             tempoExpo.querySelectorAll("div.gallery-preview").forEach((e)=>{
                 e.style.fontSize = "0.9rem";
@@ -251,22 +284,23 @@ function correctingTitle(divItem, index){
                 e.style.maxWidth = "";
             });
             tempoExpo.querySelectorAll("div.media-preview-content").forEach((e)=>{
-                e.style = "width: 100%; height: calc(100% - 2rem); object-fit: contain;";
                 if (e.querySelector("img.preview") != null){
                     const tempImg = e.querySelector("img.preview")
                     tempImg.removeAttribute("width");
                     tempImg.removeAttribute("height");
-                    tempImg.style = "width: 100%; height: 100%; object-fit: contain;";
+                    tempImg.style = "width: 100cqi; height: calc(100cqb - 2rem); object-fit: contain;";
                     e.innerHTML = "";
                     e.appendChild(tempImg);
                 }
             });
-            
+            tempoExpo.querySelector("div.gallery-tiles").style = "";
+            tempoExpo.querySelector("div.gallery-tiles").querySelectorAll("div.gallery-tile").forEach((e)=>{e.style = "";});
+            tempoExpo.querySelector("div.gallery-tiles").querySelectorAll("img").forEach((e)=>{
+                e.style = "width: 305px";
+            });
             tempoExpo.appendChild(bgDiv);
             expnadoDiv.dataset.cachedhtml = tempoExpo.innerHTML;
-        // configutring the crosspost contents
-        } //else if
-
+        } 
         divItem.appendChild(expnadoDiv);
         if (divItem.querySelector("p.parent") != null) { divItem.querySelector("p.parent").remove();}
         if (divItem.querySelector("span.rank") != null) { divItem.querySelector("span.rank").remove();}
@@ -274,7 +308,6 @@ function correctingTitle(divItem, index){
         if (divItem.querySelector("div.child") != null) { divItem.querySelector("div.child").remove();}
         if (divItem.querySelector("div.unvoted") != null) { divItem.querySelector("div.unvoted").remove();}
     }
-    
 }
 table.addEventListener("click",(e)=>{
     if (e.target.className == "cpy-button"){
@@ -284,5 +317,26 @@ table.addEventListener("click",(e)=>{
         document.execCommand("copy");
     } else if (e.target.className == "bg-div"){
         document.querySelector("div.expanded").click();
-    }
+    } else if (e.target.className == "bg-next") {
+		let listButtons = document.querySelectorAll("div.expando-button")
+		for (let i=0;i<listButtons.length;i++){
+			if (listButtons[i].className.includes("expanded") && i!=listButtons.length){
+				listButtons[i].click()
+				listButtons[i+1].click()
+				break
+			}
+		}
+	} else if (e.target.className == "bg-prev") {
+		let listButtons = document.querySelectorAll("div.expando-button")
+		for (let i=0;i<listButtons.length;i++){
+			if (listButtons[i].className.includes("expanded") && i!=0){
+				listButtons[i].click()
+				listButtons[i-1].click()
+				break
+			} else if (listButtons[i].className.includes("expanded") && i==0){
+				listButtons[i].click()
+				break
+			}
+		}
+	}
 });
