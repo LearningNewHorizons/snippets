@@ -60,11 +60,11 @@ div.title-shell > p {
 div.expando{
     display: none;
     position: fixed;
-    left: 7vw;
-    top: 7vh;
+    left: 5dvw;
+    top: 5dvh;
     z-index: 9999;
-    width: 86vw;
-    height: 86vh;
+    width: 90dvw;
+    height: 90dvh;
     align-content: center; 
     background-color: #cccccc;
     object-fit: contain;
@@ -87,14 +87,14 @@ div.bg-prev{
     display: flex;
     justify-content: center;
     align-items: center;
-    left: 4px; 
-    top: 50%; 
-    transform: translateY(-50%); 
+    left: calc(14dvh - 100px); 
+    top: 86dvh; 
+    // transform: translateY(-50%); 
     background-color: rgba(255, 255, 0, 0.8); 
     width: 100px; 
     height: 100px; 
     color:#808000; 
-    font-size: 4rem; 
+    font-size: 2rem; 
     cursor: pointer; 
     text-align: center; 
     text-justify: center; 
@@ -106,18 +106,18 @@ div.bg-next{
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 50%; 
-    transform: translateY(-50%); 
+    top: 86dvh; 
+    // transform: translateY(-50%); 
     background-color: rgba(255, 255, 0, 0.8); 
     width: 100px; 
     height: 100px; 
     color:#808000; 
-    font-size: 4rem; 
+    font-size: 2rem; 
     cursor: pointer; 
     text-align: center; 
     text-justify: center; 
     border-radius: 6px;
-    right: 4px;
+    right: calc(14dvh - 100px); 
     z-index: 5;
 }
 div.thing {
